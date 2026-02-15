@@ -21,8 +21,17 @@ import './index.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState('Home')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navItems = ['Home', 'About Us', 'Events', 'Gallery', 'Membership', 'Donate', 'Contact']
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const closeMenu = () => setIsMenuOpen(false)
+
+  const handleNavClick = (item) => {
+    setActiveTab(item)
+    closeMenu()
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -64,16 +73,23 @@ function App() {
     <div className="app">
       <nav>
         <div className="container">
-          <div className="logo">
+          <div className="logo" onClick={() => handleNavClick('Home')} style={{ cursor: 'pointer' }}>
             <img src={logo} alt="Sarga Ramanthali Logo" className="logo-img" />
             <span>സർഗ്ഗ രാമന്തളി</span>
           </div>
-          <ul className="nav-links">
+
+          <button className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu} aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
             {navItems.map(item => (
               <li key={item}>
                 <a
                   href={`#${item.toLowerCase().replace(' ', '-')}`}
-                  onClick={() => setActiveTab(item)}
+                  onClick={() => handleNavClick(item)}
                   className={activeTab === item ? 'active' : ''}
                 >
                   {item}
