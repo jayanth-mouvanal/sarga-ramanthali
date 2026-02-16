@@ -22,6 +22,7 @@ import './index.css'
 function App() {
   const [activeTab, setActiveTab] = useState('Home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   const navItems = ['Home', 'About Us', 'Events', 'Gallery', 'Membership', 'Donate', 'Contact']
 
@@ -55,6 +56,9 @@ function App() {
   }
 
   useEffect(() => {
+    // Scroll to top when tab changes
+    window.scrollTo(0, 0)
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -66,8 +70,38 @@ function App() {
     const revealedItems = document.querySelectorAll('.reveal')
     revealedItems.forEach(item => observer.observe(item))
 
+    // Immediately trigger reveal for items already in viewport
+    setTimeout(() => {
+      revealedItems.forEach(item => {
+        const rect = item.getBoundingClientRect()
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          item.classList.add('active')
+        }
+      })
+    }, 50)
+
     return () => observer.disconnect()
   }, [activeTab])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true)
+      } else {
+        setShowScrollTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
 
   return (
     <div className="app">
@@ -103,6 +137,14 @@ function App() {
       <main>
         {renderContent()}
       </main>
+
+      <button
+        className={`scroll-to-top ${showScrollTop ? 'visible' : ''}`}
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+      >
+        ↑
+      </button>
 
       <footer>
         <div className="container">
