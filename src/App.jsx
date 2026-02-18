@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import logo from './assets/logo.jpg'
 import carousel1 from './assets/carousel1.jpg'
 import carousel2 from './assets/carousel2.jpg'
@@ -105,6 +106,7 @@ function App() {
 
   return (
     <div className="app">
+      <Analytics />
       <nav>
         <div className="container">
           <div className="logo" onClick={() => handleNavClick('Home')} style={{ cursor: 'pointer' }}>
